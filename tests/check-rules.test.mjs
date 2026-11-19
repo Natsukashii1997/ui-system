@@ -52,3 +52,23 @@ test('LESSONS 每条要有以层级词开头的「升级」行：缺行、不带
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test('LESSONS 标题反引号里带 <…> 的是真实条目，不当格式样例跳过：缺升级行要报错', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'check-rules-'));
+  // 标题取自剪藏插件 chatgpt-clipper docs/LESSONS.md L-02（真实标题），删掉升级行是构造样本。
+  // 起步骨架的原写法把标题里的 `<all_urls>` 当成 <占位>，整条不查（chatgpt-clipper#10 发现）
+  const lessons = [
+    '# 开发实录与坑', '', '```markdown', '## L-01 <一句话现象>（<YYYY-MM-DD>）', '', '- 升级：〔提醒〕未升级。', '```', '',
+    '## L-02 声明了 `<all_urls>` 仍无法调用 `captureVisibleTab`（2026-11-02）', '', '- 现象：略。', '- 正确做法：略。', '',
+    '## L-03 合规：标题反引号里带 `<T>` 也照常查（2026-11-19）', '', '- 现象：略。', '- 升级：〔提醒〕未升级。', '',
+  ].join('\n');
+  try {
+    fs.mkdirSync(path.join(root, 'docs'));
+    fs.writeFileSync(path.join(root, 'docs/LESSONS.md'), lessons);
+    assert.deepEqual(checkRules(root).map(v => `${v.file}:${v.line} ${v.kind} ${v.text}`), [
+      'docs/LESSONS.md:9 lessons L-02 缺「- 升级：」一行',
+    ]);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
