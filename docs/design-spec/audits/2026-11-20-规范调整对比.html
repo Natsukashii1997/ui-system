@@ -1,0 +1,537 @@
+<title>基础规范调整对比</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>
+/* 版式：细线风格。一条主线六段（六处调整），每段固定三件事：原版 → 调整后、演示、两种判定。全页只用钴蓝一种识别色。 */
+:root{
+  --bg:#F3F4F6; --surface:#FFFFFF; --surface2:#FAFAFB; --ink:#101318; --ink2:#434A55; --ink3:#5F6672; --rule:#D7DAE0; --rule2:#E6E8EC;
+  --ink4:#7A818C;
+  --dark:#15181D; --dink:#ECEEF2; --dink2:#A7AEBA;
+  --c:#2D53D2; --ct:#E6ECFB; --cd:#1D3BA3; --ck:#8EA6F0;
+  --bad:#C8331B; --badt:#FCE9E5; --badd:#A32A16;
+  --ok:#05604F; --okt:#DBF0EA;              /* 状态：通过。取细线的青绿深色字和浅底 */
+  --cur:#F2F4F7;
+  /* 演示对象（数字分身工作台首页）的原色，只在演示区里用 */
+  --wb-bg:#EDEDEB; --wb-panel:#F4F4F2; --wb-ink:#161616; --wb-mute:#686864; --wb-line:#C8C8C3; --wb-accent:#E4502A; --wb-warn:#CF8C12; --wb-mid:#8E8E89; --wb-on:#EDEDEB; --wb-white:#FFFFFF;
+  /* 按对比度算出来的加深示例，不是定稿色 */
+  --wb-warn-ink:#8D600C; --wb-warn-big:#B57B10; --wb-accent-ink:#C03B18; --wb-accent-deep:#D2401B; --wb-mid-deep:#747470;
+  --sans:"Noto Sans SC",-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --num:"Archivo","Noto Sans SC",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,"PingFang SC","Noto Sans SC",monospace;
+  --ease:cubic-bezier(.22,.7,.2,1);
+  --w:1240px; --g:40px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#F3F4F6;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+a{color:inherit}
+.wrap{max-width:var(--w);margin:0 auto;padding-left:max(var(--g),env(safe-area-inset-left,0px));padding-right:max(var(--g),env(safe-area-inset-right,0px))}
+.k{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink3)}
+:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(243,244,246,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap}
+.brand i{display:inline-flex;gap:2px}
+.brand i b{width:6px;height:16px;display:block;background:var(--ink)}
+.brand i b:last-child{background:var(--c)}
+.top nav{display:flex;gap:2px;overflow-x:auto}
+.top nav a{text-decoration:none;font-size:13px;color:var(--ink2);padding:6px 10px;border-radius:3px;white-space:nowrap;transition:background .2s var(--ease),color .2s var(--ease)}
+.top nav a:hover{background:var(--rule2);color:var(--ink)}
+.top nav a span{font-family:var(--mono);font-size:11px;margin-right:6px;color:var(--cd);font-weight:700}
+
+.hero{position:relative;padding:72px 0 64px;background-image:linear-gradient(var(--rule2) 1px,transparent 1px),linear-gradient(90deg,var(--rule2) 1px,transparent 1px);background-size:40px 40px}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(243,244,246,0) 0%,rgba(243,244,246,.6) 55%,var(--bg) 100%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.hero-head{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:56px;align-items:end}
+.hero h1{font-weight:900;font-size:clamp(42px,6.4vw,86px);line-height:1.06;letter-spacing:-.02em;text-wrap:balance}
+.hero h1 .thin{font-weight:400;color:var(--ink4)}
+.hero .sub{margin-top:28px;font-size:clamp(18px,1.7vw,22px);line-height:1.6;font-weight:500;color:var(--ink2);max-width:30em}
+.hero .sub b{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--rule2) 62%)}
+.fact{border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.fact>div{padding:18px 18px 16px 0}
+.fact>div+div{padding-left:18px;border-left:1px solid var(--rule2)}
+.fact b{font-family:var(--num);font-weight:800;font-size:clamp(28px,3vw,40px);line-height:1;letter-spacing:-.02em;display:block;white-space:nowrap}
+.fact b em{font-style:normal;color:var(--c)}
+.fact b i{font-style:normal;font-weight:500;color:var(--ink4);font-size:.7em;margin:0 6px}
+.fact span{display:block;margin-top:10px;font-size:13.5px;line-height:1.55}
+.fact-note{grid-column:1/-1;border-top:1px solid var(--rule);padding:12px 0 0;font-size:13.5px;color:var(--ink2);line-height:1.7}
+
+.idx{margin-top:56px;background:var(--surface);border-top:4px solid var(--c);border-bottom:1px solid var(--rule)}
+.idx a{display:grid;grid-template-columns:56px 150px minmax(0,1fr) minmax(0,1fr) 28px;gap:0 20px;align-items:baseline;padding:14px 24px;text-decoration:none;border-top:1px solid var(--rule2);transition:background .2s var(--ease)}
+.idx a:first-child{border-top:0}
+.idx a:hover{background:var(--cur)}
+.idx .n{font-family:var(--num);font-weight:800;font-size:20px;color:var(--c)}
+.idx .r{font-weight:700;font-size:15px}
+.idx .r small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink3);font-weight:400}
+.idx .o{font-size:14.5px;color:var(--ink3)}
+.idx .w{font-size:14.5px;font-weight:500}
+.idx .go{font-family:var(--mono);color:var(--ink3);text-align:right}
+.idx-h{display:grid;grid-template-columns:56px 150px minmax(0,1fr) minmax(0,1fr) 28px;gap:0 20px;padding:10px 24px;border-bottom:1px solid var(--rule)}
+
+.ch{padding:112px 0 0}
+.st-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:48px;align-items:end;padding-bottom:40px;border-bottom:1px solid var(--ink)}
+.st-head.rev{grid-template-columns:minmax(0,1fr) auto}
+.st-head.rev .st-num{order:2}
+.st-num{font-family:var(--num);font-weight:800;font-size:clamp(110px,15vw,200px);line-height:.78;letter-spacing:-.05em;color:var(--c)}
+.st-head .k{color:var(--cd);display:block;margin-bottom:14px}
+.st-head h2{font-size:clamp(30px,3.8vw,50px);line-height:1.15;font-weight:900;letter-spacing:-.015em;text-wrap:balance}
+.st-head h2 em{font-style:normal;color:var(--c)}
+.blk{padding:56px 0;border-bottom:1px solid var(--rule2)}
+.blk:last-child{border-bottom:0}
+.blk-k{display:flex;align-items:center;flex-wrap:wrap;gap:6px 0;margin-bottom:26px;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:-.01em}
+.blk-k::before{content:"";width:16px;height:2px;background:var(--c);flex:none;margin-right:12px}
+.bk-t{color:var(--c)}
+.bk-d{color:var(--ink);padding-left:14px;margin-left:14px;border-left:1px solid var(--rule);font-weight:900}
+
+.goal{display:flex;flex-direction:column;max-width:60em}
+.g-row{display:grid;grid-template-columns:68px minmax(0,1fr);gap:0 12px;align-items:baseline}
+.g-row p{font-size:17px;line-height:1.75}
+.g-lab{justify-self:start;font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:1px 7px;line-height:1.6;position:relative;top:-2px;white-space:nowrap}
+.g-now .g-lab{background:var(--rule2);color:var(--ink3)}
+.g-now p{color:var(--ink2)}
+.g-now del{text-decoration:line-through;text-decoration-color:var(--bad);color:var(--ink3)}
+.g-aim .g-lab{background:var(--ct);color:var(--cd);font-weight:700}
+.g-aim p{font-weight:500;color:var(--ink);border-left:3px solid var(--c);padding-left:14px}
+.g-aim ins{text-decoration:none;font-weight:700;background:linear-gradient(transparent 60%,var(--ct) 60%)}
+.g-to{display:flex;align-items:baseline;gap:8px;margin:10px 0 10px 80px;font-size:14px;color:var(--ink3);line-height:1.7}
+.g-to i{font-style:normal;color:var(--c);font-weight:700;flex:none}
+.lvl{display:inline-block;font-family:var(--mono);font-size:11px;padding:0 6px;margin-right:8px;vertical-align:2px;border:1px solid var(--ink3);color:var(--ink2)}
+.lvl.red{border-color:var(--badd);color:var(--badd)}
+
+/* 演示区 */
+.demo-cap{font-size:15px;color:var(--ink2);margin:-10px 0 20px;max-width:48em}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.uno{display:grid;grid-template-columns:minmax(0,1fr)}
+.duo.stack{grid-template-columns:minmax(0,1fr);gap:16px}
+.pane{border:1px solid var(--rule);background:var(--surface);min-width:0}
+.pane-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 16px;border-bottom:1px solid var(--rule);background:var(--surface2);font-size:13.5px;font-weight:700}
+.pane-h span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink3);font-weight:400;white-space:nowrap}
+.pane{display:flex;flex-direction:column}
+.scroll{overflow-x:auto;flex:1;display:flex;background:var(--wb-bg)}
+.scroll>*{flex:1}
+.spec{background:var(--wb-bg);color:var(--wb-ink);font-family:var(--mono);padding:20px;min-width:var(--min,0)}
+.verdict{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:24px;border-top:2px solid var(--ink)}
+.verdict>div{padding:14px 18px 4px 0}
+.verdict>div+div{padding-left:18px;border-left:1px solid var(--rule2)}
+.verdict .k{display:block;margin-bottom:6px}
+.verdict p{font-size:15px;line-height:1.7}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:0 7px;margin-right:8px;border-radius:2px;line-height:1.7;white-space:nowrap}
+.chip.no{background:var(--badt);color:var(--badd)}
+.chip.yes{background:var(--okt);color:var(--ok)}
+.chip.tip{background:var(--rule2);color:var(--ink2)}
+
+/* 演示 1：清单行 */
+.wrow{display:grid;grid-template-columns:76px minmax(0,1fr) 112px 64px auto;gap:0 14px;padding:12px 14px;background:var(--wb-panel);border:1px solid var(--wb-ink);position:relative}
+.wrow.base{align-items:baseline}
+.wrow.mid{align-items:center}
+.wtag{font-size:12px;border:1px solid var(--wb-ink);padding:1px 6px;justify-self:start;white-space:nowrap;line-height:1.55}
+.wmain b{display:block;font-size:14px;line-height:1.55}
+.wmain span{display:block;font-size:12px;color:var(--wb-mute);line-height:1.55}
+.wgrade,.wtime{font-size:12px;white-space:nowrap}
+.wtime{color:var(--wb-mute)}
+.wgrade i{font-style:normal;font-size:11px;border:1px solid var(--wb-ink);padding:0 4px;margin-right:6px}
+.wbtns{display:flex;gap:10px;align-items:baseline}
+.wbt{font-family:var(--mono);font-size:13px;height:32px;padding:0 12px;border:1px solid var(--wb-ink);background:transparent;color:var(--wb-ink)}
+.wbt.pri{background:var(--wb-ink);color:var(--wb-on)}
+.wbt.lnk{border:0;padding:0;text-decoration:underline}
+.wrow::after{content:"";position:absolute;left:0;right:0;border-top:1px dashed var(--c);pointer-events:none}
+.wrow.base::after{top:31px}
+.wrow.mid::after{top:50%}
+.note{font-family:var(--sans);font-size:12.5px;color:var(--wb-mute);margin-top:10px;line-height:1.6}
+
+/* 演示 2：对齐线 */
+.lines{position:relative;padding:18px 20px 18px 0}
+.lines .gl{position:absolute;top:0;bottom:0;border-left:1px dashed var(--c)}
+.lines .gl.bad{border-left-color:var(--bad)}
+.lines .gl b{position:absolute;top:2px;left:4px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--cd);white-space:nowrap;background:var(--wb-bg)}
+.lines .gl.bad b{color:var(--badd)}
+.lines h4{margin:22px 0 8px 40px;font-size:19px;font-weight:700;font-family:var(--mono)}
+.lines p{margin-left:40px;font-size:13px}
+.lines .tb{margin:12px 0 0 40px;border:1px solid var(--wb-ink);width:260px;font-size:12px;background:var(--wb-panel)}
+.lines .tb div{padding:5px 8px 5px 0;border-top:1px solid var(--wb-line)}
+.lines .tb div:first-child{border-top:0;font-weight:700}
+.lines .rt{position:absolute;right:20px;top:42px;font-size:12px;color:var(--wb-mute);text-align:right}
+
+/* 演示 3：字号 */
+.sizes{display:grid;grid-template-columns:44px minmax(0,1fr);gap:2px 14px;align-items:baseline}
+.sizes i{font-style:normal;font-size:11px;color:var(--wb-mute);text-align:right}
+.sizes span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.tier{display:grid;grid-template-columns:86px minmax(0,1fr);gap:0 14px;padding:10px 0;border-top:1px solid var(--wb-line)}
+.tier:first-child{border-top:0;padding-top:0}
+.tier>b{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--cd);padding-top:2px}
+.tier>b small{display:block;font-weight:400;color:var(--wb-mute);font-size:11.5px}
+
+/* 演示 4：最小字号 */
+.mins{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px 14px;align-items:baseline}
+.mins i{font-style:normal;font-size:11px;color:var(--wb-mute);text-align:right}
+.mins em{font-style:normal;font-family:var(--sans)}
+.mins .to12{font-size:12px}
+
+/* 演示 5：间距 */
+.card5{background:var(--wb-panel);border:1px solid var(--wb-line);padding:16px 18px;font-family:var(--mono)}
+.card5 h5{margin:0;font-size:15px;font-weight:700;line-height:1.4}
+.card5 p{font-size:12px;color:var(--wb-mute);line-height:1.55}
+.card5 .it{font-size:12px;line-height:1.55;display:flex;justify-content:space-between;gap:12px}
+.even h5,.even p,.even .it{margin-top:16px}
+.even h5:first-child{margin-top:0}
+.near h5{margin-top:22px}
+.near h5:first-child{margin-top:0}
+.near p{margin-top:3px}
+.near .it{margin-top:7px}
+.near p + .it{margin-top:10px}
+.meta5{font-family:var(--sans);font-size:12.5px;color:var(--wb-mute);margin-top:12px;line-height:1.6}
+
+/* 演示 6：彩色小字 */
+.ctab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:0;border:1px solid var(--wb-line);background:var(--wb-bg);min-width:720px}
+.ctab>div{padding:12px 14px;border-top:1px solid var(--wb-line);display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.ctab>div:nth-child(-n+3){border-top:0;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--wb-mute);background:var(--wb-panel)}
+.ctab>div:nth-child(3n+1){font-family:var(--sans);font-size:13.5px;color:var(--wb-ink)}
+.ctab>div:nth-child(3n+2),.ctab>div:nth-child(3n){border-left:1px solid var(--wb-line)}
+.ctab .cr{margin-left:auto;font-size:11px;font-weight:700;padding:0 6px;font-family:var(--mono);white-space:nowrap}
+.ctab .cr.no{background:var(--badt);color:var(--badd)}
+.ctab .cr.yes{background:var(--okt);color:var(--ok)}
+.t11{font-size:11px}.t12{font-size:12px}.t26{font-size:26px;font-weight:700;line-height:1}
+.bdg{font-size:12px;padding:1px 7px;line-height:1.55}
+
+.next{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center;padding:28px 32px;background:var(--dark);color:var(--surface);margin:112px 0 48px}
+.next p{font-size:clamp(18px,1.8vw,22px);font-weight:700;line-height:1.5}
+.next .bars{display:flex;gap:4px}
+.next .bars b{width:36px;height:36px;display:grid;place-items:center;font-family:var(--num);font-size:14px;font-weight:800;background:var(--cd);color:var(--surface)}
+.foot{padding-bottom:72px}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:48px}
+.foot h4{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink3);font-weight:500;margin:0 0 12px}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot li{padding:9px 0;border-top:1px solid var(--rule);font-size:14.5px}
+.foot li small{display:block;font-family:var(--mono);font-size:11px;color:var(--ink3);word-break:break-all}
+.foot .disc{font-size:13px;color:var(--ink3);line-height:1.7}
+
+@media (max-width:900px){
+  :root{--g:16px}
+  .hero{padding:48px 0 40px}
+  .hero-head,.foot-grid{grid-template-columns:minmax(0,1fr);gap:36px}
+  .idx-h{display:none}
+  .idx a{grid-template-columns:40px minmax(0,1fr);gap:2px 12px;padding:14px 16px}
+  .idx .o,.idx .w{grid-column:2}
+  .idx .go{display:none}
+  .ch{padding-top:72px}
+  .st-head,.st-head.rev{grid-template-columns:minmax(0,1fr);gap:20px}
+  .st-head.rev .st-num{order:0}
+  .st-num{font-size:96px}
+  .duo,.verdict{grid-template-columns:minmax(0,1fr)}
+  .verdict>div+div{padding-left:0;border-left:0;border-top:1px solid var(--rule2)}
+  .g-to{margin-left:0}
+  .next{grid-template-columns:minmax(0,1fr);margin-top:72px;padding:24px 20px}
+  .top nav a{padding:6px 8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#top"><i><b></b><b></b><b></b></i>基础设计规范</a>
+  <nav aria-label="六处调整">
+    <a href="#c1"><span>01</span>行内对齐</a><a href="#c2"><span>02</span>对齐线查法</a><a href="#c3"><span>03</span>文字档位</a><a href="#c4"><span>04</span>最小字号</a><a href="#c5"><span>05</span>间距刻度</a><a href="#c6"><span>06</span>彩色小字</a>
+  </nav>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap">
+  <div class="hero-head">
+    <div>
+      <span class="k">草案 v0.2 → v0.3 · 2026-11-20</span>
+      <h1>试查之后，<br><span class="thin">规范改了六处</span></h1>
+      <p class="sub">拿你定稿的数字分身工作台首页逐条查了一遍。页面是好的，却有几条规则判它不合格，所以<b>该改的是规范</b>。下面每一处都给出原版、调整后，和它在那张页面上的实际效果。</p>
+    </div>
+    <div class="fact">
+      <div><b>54<i>→</i><em>55</em></b><span>规则条数。新增一条「彩色小字」</span></div>
+      <div><b>12<i>→</i><em>11</em></b><span>红线条数。「间距只取自刻度」降为基础要求</span></div>
+      <p class="fact-note">演示里的界面片段按工作台首页的真实颜色和字体重画，文字取自页面上的示例数据。工作台页面本身没有改动。</p>
+    </div>
+  </div>
+
+  <div class="idx" role="list">
+    <div class="idx-h k"><span>编号</span><span>规则</span><span>原版</span><span>调整后</span><span></span></div>
+    <a href="#c1" role="listitem"><span class="n">01</span><span class="r">行内对齐<small>A-02 · 红线</small></span><span class="o">同一行的文字一律按首行基线对齐</span><span class="w">只管并排的单行文字；多行的行可以整体居中</span><span class="go">↓</span></a>
+    <a href="#c2" role="listitem"><span class="n">02</span><span class="r">对齐线查法<small>A-01 · 红线</small></span><span class="o">只有一个元素用的对齐线算失误</span><span class="w">边框造成的 1px、右对齐的元素不算</span><span class="go">↓</span></a>
+    <a href="#c3" role="listitem"><span class="n">03</span><span class="r">文字档位<small>C-09 · 基础</small></span><span class="o">一屏文字不超过 4 级，按字号个数数</span><span class="w">按看得出的档数；同一档里不留相近字号</span><span class="go">↓</span></a>
+    <a href="#c4" role="listitem"><span class="n">04</span><span class="r">最小字号<small>T-03 · 基础</small></span><span class="o">要读的文字最小 12px</span><span class="w">句子 12px，标签、编号、时间 10px</span><span class="go">↓</span></a>
+    <a href="#c5" role="listitem"><span class="n">05</span><span class="r">间距刻度<small>S-01 · 红线 → 基础</small></span><span class="o">红线：间距只取自刻度</span><span class="w">降为基础要求；亲疏关系那条留在红线</span><span class="go">↓</span></a>
+    <a href="#c6" role="listitem"><span class="n">06</span><span class="r">彩色小字<small>K-06 · 新增</small></span><span class="o">没有这条</span><span class="w">彩色当小字用时加深；色块上的字单独定</span><span class="go">↓</span></a>
+  </div>
+</div></section>
+
+<!-- 01 -->
+<section class="ch" id="c1"><div class="wrap">
+  <div class="st-head">
+    <div class="st-num">01</div>
+    <div><span class="k">对齐 · A-02 · 红线</span><h2>多行的清单行，<em>可以整体居中</em></h2></div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">规则原文</span><span class="bk-d">把「同一行」收窄成「并排的单行文字」</span></div>
+    <div class="goal">
+      <div class="g-row g-now"><span class="g-lab">原版</span><p><del>同一行里的文字按首行基线对齐</del>：标题和旁边的说明、标签和值、<del>表格同一行的单元格</del>。例外：图标配单行文字、按钮内部，按视觉居中。</p></div>
+      <div class="g-to"><i>↓ 所以</i>「等我拍板」的每一行是两行主内容配单行的标签和按钮，整体垂直居中。原版会判它不合格。</div>
+      <div class="g-row g-aim"><span class="g-lab">调整后</span><p><ins>并排的单行文字</ins>按基线对齐：标题和旁边的说明、标签和值、同一行里字号不同的文字。<ins>一行里有多行内容时，整体垂直居中或顶对齐选一种，全页同类的行用同一种。</ins>图标配单行文字、按钮内部，按视觉居中。</p></div>
+    </div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">页面演示</span><span class="bk-d">同一行内容，两种对齐</span></div>
+    <p class="demo-cap">蓝色虚线是对齐的基准：上面是第一行文字的基线，下面是整行的中线。</p>
+    <div class="duo stack">
+      <div class="pane">
+        <div class="pane-h">原版要求的样子<span>按首行基线</span></div>
+        <div class="scroll"><div class="spec" style="--min:620px">
+          <div class="wrow base"><span class="wtag">合并 PR</span><div class="wmain"><b>dt-sandbox#42 · 补反向测试</b><span>GPT 审查通过，CI 全绿。合并吗？</span></div><span class="wgrade"><i>B</i>点一下就做</span><span class="wtime">5 小时前</span><span class="wbtns"><button class="wbt pri" type="button" tabindex="-1">合并</button><button class="wbt lnk" type="button" tabindex="-1">详情</button></span></div>
+          <p class="note">标签、档位、时间、按钮都贴着第一行，整行重心偏上，第二行下面显得空。</p>
+        </div></div>
+      </div>
+      <div class="pane">
+        <div class="pane-h">你定稿页面的样子<span>整体垂直居中</span></div>
+        <div class="scroll"><div class="spec" style="--min:620px">
+          <div class="wrow mid"><span class="wtag">合并 PR</span><div class="wmain"><b>dt-sandbox#42 · 补反向测试</b><span>GPT 审查通过，CI 全绿。合并吗？</span></div><span class="wgrade"><i>B</i>点一下就做</span><span class="wtime">5 小时前</span><span class="wbtns"><button class="wbt pri" type="button" tabindex="-1">合并</button><button class="wbt lnk" type="button" tabindex="-1">详情</button></span></div>
+          <p class="note">两行主内容当成一个整体，其余单行元素对着它的中线，上下均衡。</p>
+        </div></div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div><span class="k">原版怎么判下面这种</span><p><span class="chip no">不通过</span>没有按首行基线对齐。</p></div>
+      <div><span class="k">调整后怎么判下面这种</span><p><span class="chip yes">通过</span>多行的行选了居中，页面上 6 行都用同一种。</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 02 -->
+<section class="ch" id="c2"><div class="wrap">
+  <div class="st-head rev">
+    <div class="st-num">02</div>
+    <div><span class="k">对齐 · A-01 的查法 · 红线</span><h2>差 1px 的边框、右对齐的元素，<em>不算孤立的对齐线</em></h2></div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">规则原文</span><span class="bk-d">规则不变，只改「怎么查」</span></div>
+    <div class="goal">
+      <div class="g-row g-now"><span class="g-lab">原版</span><p>截图上画竖线；只有一个元素用的对齐线算失误。</p></div>
+      <div class="g-to"><i>↓ 所以</i>工作台首屏主区有 6 个元素在 x=260 这条线上，执行方表格的表头在 x=261。差的 1px 是表格的边框，原版会把它报成失误。</div>
+      <div class="g-row g-aim"><span class="g-lab">调整后</span><p>截图上画竖线。<ins>边框造成的 1px 偏移算同一条线；右对齐、居中的元素按右边缘、中线算；除此之外，</ins>只有一个元素用的对齐线算失误。</p></div>
+    </div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">页面演示</span><span class="bk-d">同一块内容，两种查法画出的线</span></div>
+    <p class="demo-cap">示意图，为了看得清把 1px 的偏移放大了。红线是被判为「孤立」的对齐线。</p>
+    <div class="duo">
+      <div class="pane">
+        <div class="pane-h">原版的查法<span>报 2 处</span></div>
+        <div class="scroll"><div class="spec" style="--min:440px"><div class="lines">
+          <span class="gl" style="left:40px"><b>主线 · 3 个元素</b></span>
+          <span class="gl bad" style="left:49px;top:128px"><b style="top:auto;bottom:2px">+1px · 1 个</b></span>
+          <span class="gl bad" style="left:calc(100% - 118px);bottom:auto;height:76px"><b>左边缘 · 1 个</b></span>
+          <h4>数字分身</h4><p>排好谁先做、谁来审。</p>
+          <div class="tb"><div style="padding-left:8px">执行方</div><div style="padding-left:8px">Claude Code</div><div style="padding-left:8px">Codex</div></div>
+          <span class="rt">2026-11-19 周四<br>检查于 14:15</span>
+        </div></div></div>
+      </div>
+      <div class="pane">
+        <div class="pane-h">调整后的查法<span>报 0 处</span></div>
+        <div class="scroll"><div class="spec" style="--min:440px"><div class="lines">
+          <span class="gl" style="left:40px"><b>主线 · 4 个元素（含带框的表格）</b></span>
+          <span class="gl" style="left:calc(100% - 20px)"><b style="left:auto;right:4px">右边缘</b></span>
+          <h4>数字分身</h4><p>排好谁先做、谁来审。</p>
+          <div class="tb"><div style="padding-left:8px">执行方</div><div style="padding-left:8px">Claude Code</div><div style="padding-left:8px">Codex</div></div>
+          <span class="rt">2026-11-19 周四<br>检查于 14:15</span>
+        </div></div></div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div><span class="k">原版怎么判</span><p><span class="chip no">误报</span>表格里的字因为边框偏了一点，右对齐的日期左边缘没人共用，都被算成失误。</p></div>
+      <div><span class="k">调整后怎么判</span><p><span class="chip yes">通过</span>表格按外框算，归到主线；右对齐的日期按右边缘算。</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 03 -->
+<section class="ch" id="c3"><div class="wrap">
+  <div class="st-head">
+    <div class="st-num">03</div>
+    <div><span class="k">构图 · C-09 · 基础要求</span><h2>数「看得出的档」，<em>不数字号的个数</em></h2></div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">规则原文</span><span class="bk-d">4 级改成 4 档，另加一句管相近字号</span></div>
+    <div class="goal">
+      <div class="g-row g-now"><span class="g-lab">原版</span><p>一屏内<del>文字层级不超过 4 级</del>；相邻两级的差别一眼看得出（建议字号相差 1.2 倍以上，或字重差 200 以上）。</p></div>
+      <div class="g-to"><i>↓ 所以</i>工作台首屏用了 9 种字号，按个数数远超 4 级。但眼睛看到的只有四档，层级是清楚的。</div>
+      <div class="g-row g-aim"><span class="g-lab">调整后</span><p>一屏内<ins>眼睛看得出的文字档位不超过 4 档</ins>（例如大标题、区块标题、正文、标签）。相邻两档的差别一眼看得出（建议字号相差 1.2 倍以上，或字重差 200 以上）；<ins>同一档里不出现两个相近的字号。</ins></p></div>
+    </div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">页面演示</span><span class="bk-d">工作台首屏实际用到的 9 种字号</span></div>
+    <div class="duo">
+      <div class="pane">
+        <div class="pane-h">原版的数法<span>9 种字号</span></div>
+        <div class="scroll"><div class="spec" style="--min:420px"><div class="sizes">
+          <i>66</i><span style="font-size:66px;font-weight:700;line-height:1.1">数字分身</span>
+          <i>19</i><span style="font-size:19px">+ 新建工作流</span>
+          <i>16</i><span style="font-size:16px">Claude Code</span>
+          <i>15</i><span style="font-size:15px">排好谁先做、谁来审</span>
+          <i>14</i><span style="font-size:14px">6 条工作流 · 3 单进行中</span>
+          <i>13</i><span style="font-size:13px">首页　汇报　主线　协同</span>
+          <i>12</i><span style="font-size:12px">2026-11-19 周四 14:20</span>
+          <i>11</i><span style="font-size:11px">执行方　检查于 14:15</span>
+          <i>10</i><span style="font-size:10px">本机 CLI · claude-opus-5-5</span>
+        </div></div></div>
+      </div>
+      <div class="pane">
+        <div class="pane-h">调整后的数法<span>4 档</span></div>
+        <div class="scroll"><div class="spec" style="--min:420px">
+          <div class="tier"><b>大标题<small>1 个值</small></b><div class="sizes"><i>66</i><span style="font-size:66px;font-weight:700;line-height:1.1">数字分身</span></div></div>
+          <div class="tier"><b>区块标题<small>3 个相近值</small></b><div class="sizes"><i>19</i><span style="font-size:19px">+ 新建工作流</span><i>16</i><span style="font-size:16px">Claude Code</span><i>15</i><span style="font-size:15px">排好谁先做、谁来审</span></div></div>
+          <div class="tier"><b>正文<small>3 个相近值</small></b><div class="sizes"><i>14</i><span style="font-size:14px">6 条工作流 · 3 单进行中</span><i>13</i><span style="font-size:13px">首页　汇报　主线　协同</span><i>12</i><span style="font-size:12px">2026-11-19 周四 14:20</span></div></div>
+          <div class="tier"><b>标签<small>2 个相近值</small></b><div class="sizes"><i>11</i><span style="font-size:11px">执行方　检查于 14:15</span><i>10</i><span style="font-size:10px">本机 CLI · claude-opus-5-5</span></div></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div><span class="k">原版怎么判</span><p><span class="chip no">不通过</span>9 种字号，超过 4 级。</p></div>
+      <div><span class="k">调整后怎么判</span><p><span class="chip yes">通过</span>分成 4 档。<span class="chip tip">提醒</span>后三档里各有相近的字号（如 16 和 15、13 和 12），可以合并。</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 04 -->
+<section class="ch" id="c4"><div class="wrap">
+  <div class="st-head rev">
+    <div class="st-num">04</div>
+    <div><span class="k">文字 · T-03 · 基础要求</span><h2>句子和标签，<em>分两个下限</em></h2></div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">规则原文</span><span class="bk-d">一个 12px 拆成 12px 和 10px</span></div>
+    <div class="goal">
+      <div class="g-row g-now"><span class="g-lab">原版</span><p>界面里<del>要读的文字最小 12px</del>（建议值；投屏、海报另定）。内容放不下时先改文案、再换版式，不缩字号。</p></div>
+      <div class="g-to"><i>↓ 所以</i>工作台首页约 2100 个字符里，10px 和 11px 的合计约 34%，大多是标签、编号和时间。原版会把它们全部判为过小。</div>
+      <div class="g-row g-aim"><span class="g-lab">调整后</span><p><ins>要读的句子不小于 12px；一眼扫过的标签、编号、时间不小于 10px</ins>（都是建议值；投屏、海报另定）。内容放不下时先改文案、再换版式，不缩字号。</p></div>
+    </div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">页面演示</span><span class="bk-d">页面上四段小字，按原样的字号</span></div>
+    <div class="uno"><div class="pane">
+      <div class="pane-h">工作台首页的小字<span>左：字号　右：两版各怎么判</span></div>
+      <div class="scroll"><div class="spec" style="--min:640px"><div class="mins">
+        <i>10</i><span style="font-size:10px">本机 CLI · claude-opus-5-5</span><em><span class="chip no">原版 ✕</span><span class="chip yes">调整后 ✓ 标签</span></em>
+        <i>11</i><span style="font-size:11px">执行方　检查于 14:15</span><em><span class="chip no">原版 ✕</span><span class="chip yes">调整后 ✓ 标签和时间</span></em>
+        <i>11</i><span style="font-size:11px;color:var(--wb-warn-ink)">#221 卡在 GPT 审：网页未登录</span><em><span class="chip no">原版 ✕</span><span class="chip no">调整后 ✕ 这是要读的句子</span></em>
+        <i>12</i><span class="to12" style="color:var(--wb-warn-ink)">#221 卡在 GPT 审：网页未登录</span><em><span class="chip tip">同一句放到 12px</span></em>
+      </div></div></div>
+    </div></div>
+    <div class="verdict">
+      <div><span class="k">原版怎么判</span><p><span class="chip no">不通过</span>10px、11px 的字一律过小，约三分之一的文字都要放大。</p></div>
+      <div><span class="k">调整后怎么判</span><p><span class="chip yes">大部分通过</span>标签、编号、时间保留。<span class="chip no">仍不通过</span>11px 的整句提示要放大到 12px。</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 05 -->
+<section class="ch" id="c5"><div class="wrap">
+  <div class="st-head">
+    <div class="st-num">05</div>
+    <div><span class="k">间距 · S-01 · 红线降为基础要求</span><h2>刻度是手段，<em>亲疏关系才是红线</em></h2></div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">规则原文</span><span class="bk-d">文字不变，只调级别</span></div>
+    <div class="goal">
+      <div class="g-row g-now"><span class="g-lab">原版</span><p><span class="lvl red">红线</span>所有间距取自这次设计的间距刻度，不出现刻度外的值。同一种关系全页同一个值。</p></div>
+      <div class="g-to"><i>↓ 所以</i>工作台首页用了 30 多种间距，3、5、7、9、11px 都有，没有刻度。但标题离自己的内容近、离上一块远，看起来不乱。</div>
+      <div class="g-row g-aim"><span class="g-lab">调整后</span><p><span class="lvl">基础要求</span>规则文字不变。<ins>红线只留「亲疏分明」那一条（S-02）</ins>：组内间距小于组间间距，标题离它管的内容比离上一块近。</p></div>
+    </div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">页面演示</span><span class="bk-d">哪一个看起来乱</span></div>
+    <p class="demo-cap">两块内容完全一样，只有间距不同。</p>
+    <div class="duo">
+      <div class="pane">
+        <div class="pane-h">间距都在刻度上，但处处一样<span>全部 16px</span></div>
+        <div class="scroll"><div class="spec" style="--min:360px">
+          <div class="card5 even"><h5>今天的运行</h5><p>9 个已跑 · 2 个要留意</p><div class="it"><span>11:20 标准开发 #221</span><span>卡在 GPT 审</span></div><div class="it"><span>18:00 群学习报告写稿</span><span>重写 1 处</span></div><h5>自动化</h5><p>8 个启用 · 1 个暂停</p><div class="it"><span>个人项目日报</span><span>明天 09:15</span></div><div class="it"><span>记忆日报</span><span>明天 07:30</span></div></div>
+          <p class="meta5">标题上面和下面一样远，分不出哪几行是一组，像一条条往下堆。</p>
+        </div></div>
+      </div>
+      <div class="pane">
+        <div class="pane-h">间距不在刻度上，但亲疏分明<span>3 / 7 / 10 / 22px</span></div>
+        <div class="scroll"><div class="spec" style="--min:360px">
+          <div class="card5 near"><h5>今天的运行</h5><p>9 个已跑 · 2 个要留意</p><div class="it"><span>11:20 标准开发 #221</span><span>卡在 GPT 审</span></div><div class="it"><span>18:00 群学习报告写稿</span><span>重写 1 处</span></div><h5>自动化</h5><p>8 个启用 · 1 个暂停</p><div class="it"><span>个人项目日报</span><span>明天 09:15</span></div><div class="it"><span>记忆日报</span><span>明天 07:30</span></div></div>
+          <p class="meta5">标题贴着自己的内容，两组之间拉开。工作台首页属于这一种。</p>
+        </div></div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div><span class="k">原版怎么判</span><p>左边只违反 S-02；右边违反红线 S-01。<span class="chip no">两边都不通过</span>看不出谁更该改。</p></div>
+      <div><span class="k">调整后怎么判</span><p>左边<span class="chip no">违反红线</span>右边<span class="chip tip">基础项提醒</span>把间距收到一套刻度上会更整齐，但不拦。</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 06 -->
+<section class="ch" id="c6"><div class="wrap">
+  <div class="st-head rev">
+    <div class="st-num">06</div>
+    <div><span class="k">颜色 · K-06 · 新增</span><h2>彩色当小字用，<em>要用加深后的版本</em></h2></div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">规则原文</span><span class="bk-d">试查里查出的真问题，补一条规则</span></div>
+    <div class="goal">
+      <div class="g-row g-now"><span class="g-lab">原版</span><p>没有这条。只有总的要求：要读的文字对比度不低于 4.5，大字不低于 3。</p></div>
+      <div class="g-to"><i>↓ 所以</i>工作台首页有 36 处对比度不够，几乎都是同一个原因：把橙色、琥珀色原样拿来写小字，或者在色块上默认用白字。</div>
+      <div class="g-row g-aim"><span class="g-lab">调整后</span><p><ins>彩色用作小字时，用加深后的版本，保证对比度够；色块上的文字颜色单独定，不默认用白色。</ins></p></div>
+    </div>
+  </div>
+  <div class="blk">
+    <div class="blk-k"><span class="bk-t">页面演示</span><span class="bk-d">页面上的五处，原色和加深后</span></div>
+    <p class="demo-cap">右上角的数字是对比度。加深后的颜色是按对比度算出来的示例，不是定稿色。</p>
+    <div class="uno"><div class="pane">
+      <div class="scroll"><div class="ctab">
+        <div>位置</div><div>页面上的原色</div><div>按新规则加深后</div>
+        <div>琥珀色提示句（11px）</div>
+        <div><span class="t11" style="color:var(--wb-warn)">#221 卡在 GPT 审：网页未登录</span><span class="cr no">2.42</span></div>
+        <div><span class="t11" style="color:var(--wb-warn-ink)">#221 卡在 GPT 审：网页未登录</span><span class="cr yes">4.70</span></div>
+        <div>橙色小字（12px）</div>
+        <div><span class="t12" style="color:var(--wb-accent)">等我拍板 · 14:20 · 默认</span><span class="cr no">3.27</span></div>
+        <div><span class="t12" style="color:var(--wb-accent-ink)">等我拍板 · 14:20 · 默认</span><span class="cr yes">4.62</span></div>
+        <div>橙色标签上的字</div>
+        <div><span class="bdg" style="background:var(--wb-accent);color:var(--wb-white)">规则改动</span><span class="bdg" style="background:var(--wb-accent);color:var(--wb-white)">6</span><span class="cr no">3.83</span></div>
+        <div><span class="bdg" style="background:var(--wb-accent-deep);color:var(--wb-white)">规则改动</span><span class="bdg" style="background:var(--wb-accent);color:var(--wb-ink)">6</span><span class="cr yes">4.68 / 4.72</span></div>
+        <div>灰色「CX」徽标</div>
+        <div><span class="bdg" style="background:var(--wb-mid);color:var(--wb-on)">CX</span><span class="cr no">2.81</span></div>
+        <div><span class="bdg" style="background:var(--wb-mid-deep);color:var(--wb-white)">CX</span><span class="cr yes">4.69</span></div>
+        <div>琥珀色大数字（26px，要求 3）</div>
+        <div><span class="t26" style="color:var(--wb-warn)">2</span><span class="cr no">2.42</span></div>
+        <div><span class="t26" style="color:var(--wb-warn-big)">2</span><span class="cr yes">3.09</span></div>
+      </div></div>
+    </div></div>
+    <div class="verdict">
+      <div><span class="k">原版能做什么</span><p><span class="chip tip">只能事后查出</span>量对比度会发现不够，但没告诉设计时该怎么避免。</p></div>
+      <div><span class="k">调整后能做什么</span><p><span class="chip yes">事前就定好</span>每种彩色配一个「写小字用」的深色版，色块上的字单独指定。橙色标签有两种做法：加深底色配白字，或原底色配墨色字。</p></div>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap">
+  <div class="next">
+    <p>这六处调整已随 v0.3 确认。工作台页面上那 36 处对比度要不要改，由你另外决定。</p>
+    <div class="bars" aria-hidden="true"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b></div>
+  </div>
+  <footer class="foot">
+    <div class="foot-grid">
+      <div>
+        <h4>来源</h4>
+        <ul>
+          <li>基础设计规范 v0.3<small>ui-system / docs/design-spec/DESIGN.md</small></li>
+          <li>试查报告<small>ui-system / docs/design-spec/audits/2026-11-20-数字分身工作台首页.md</small></li>
+          <li>被查的页面<small>digital-twin / docs/design/workbench.html（2026-11-19 定稿）</small></li>
+        </ul>
+      </div>
+      <div>
+        <h4>说明</h4>
+        <p class="disc">演示片段是按工作台首页的颜色、字体和示例文字重画的局部，不是原页面截图；演示 02 是示意图。字号种类、间距种类、对比度这些数字，是 2026-11-20 在 Chromium 里以 1440×900 打开定稿文件量出来的，没有在 Safari 或真实应用窗口里量。这六处调整已随 v0.3 由常浩在 2026-11-20 确认。</p>
+      </div>
+    </div>
+  </footer>
+</div>
+</main>
