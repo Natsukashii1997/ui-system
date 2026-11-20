@@ -14,6 +14,8 @@
 |---|---|
 | 改需求、加功能 | 《V1.3 架构定稿》（`/Users/nat/Documents/ChatGPT/个人/work/digital-twin/docs/项目体系重构/2026-11-07-V1.3-ChatGPT架构定稿与工程推进令.md`） |
 | 收集或查找 UI 参考、外部组件库 | [docs/references/README.md](docs/references/README.md)（只记链接与评估，不搬代码） |
+| 写或改设计规范 | [docs/design-spec/DESIGN.md](docs/design-spec/DESIGN.md)（与风格无关的基础规范 v0.3，常浩 2026-11-20 确认；还没校验的数值见附录 B） |
+| 判断某处算不算已定、要改已定内容 | [docs/DECIDED.md](docs/DECIDED.md) 已定内容登记表（改登记过的内容先单独问常浩） |
 | 排障、改脚本、装 launchd 或定时任务 | 先 `grep -n 关键词 docs/LESSONS.md`，再搜全局坑 `/Users/nat/Documents/ChatGPT/个人/work/agent-kit/LESSONS.md` |
 | 开需求、拆任务、实现、审查 | 下面「Agent skills」一节 |
 | 写交接、验收别人的交接 | [docs/templates/handoff.md](docs/templates/handoff.md) 骨架；[OPERATIONS](docs/OPERATIONS.md)「交接写法」「报告与验收」 |
@@ -41,6 +43,9 @@ AGENTS.md            入口（本文件）
 CURRENT.md           当前状态与唯一下一步；每轮交接写在顶部
 docs/
   agents/            Matt Pocock 技能读的约定：issue 看板、分流标签、领域文档
+  DECIDED.md         已定内容登记表（常浩选定、确认过的规范和规则）
+  design-spec/       基础设计规范 DESIGN.md，试查报告和对比页在 audits/
+  references/        UI 参考与组件来源：收录表、提炼文档、许可允许时存的原文
   LESSONS.md         本项目的坑（排障、改脚本前先搜）
   OPERATIONS.md      操作手册：交接写法、报告与验收
   templates/handoff.md  交接一节的骨架
