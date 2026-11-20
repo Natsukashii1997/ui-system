@@ -31,6 +31,7 @@
 ```sh
 node --test tests/*.test.mjs     # 交接格式 + 通用规则（含自测）
 node scripts/check-rules.mjs     # 只跑通用规则检查
+git config core.hooksPath scripts/hooks   # 装提交、推送前的必经检查（每个克隆、每台电脑各一次；不用 --no-verify 绕过）
 ```
 
 ## 结构

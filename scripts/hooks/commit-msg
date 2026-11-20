@@ -1,0 +1,3 @@
+#!/bin/sh
+# 修复类提交要写「同类：」一行，规则在 commit-msg.mjs（复盘 P4，常浩 2026-11-20 批）
+exec node "$(git rev-parse --show-toplevel)/scripts/hooks/commit-msg.mjs" "$1"
