@@ -1,0 +1,12 @@
+#!/bin/sh
+# 推送前的必经检查：规则检查 + 测试，不过就不推（复盘 P6，常浩 2026-11-20 批）。
+# 装法：在项目根目录 `git config core.hooksPath scripts/hooks`（每个克隆、每台电脑各装一次，AGENTS「运行」写着）。
+# 全量测试超过 3 分钟的项目，把下面的 TESTS 改成只跑快的部分；全量照《工程流程》第 5 节，合并前在干净 worktree 跑。
+# 不用 --no-verify 绕过（agent-kit 的 guard-git 会拦）；检查本身有问题就修检查。
+set -e
+cd "$(git rev-parse --show-toplevel)"
+TESTS='node --test tests/*.test.mjs'
+echo "[pre-push] 规则检查：node scripts/check-rules.mjs" >&2
+node scripts/check-rules.mjs
+echo "[pre-push] 测试：$TESTS" >&2
+sh -c "$TESTS"
