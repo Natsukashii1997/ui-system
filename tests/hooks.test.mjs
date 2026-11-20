@@ -127,3 +127,21 @@ test('pre-push 真跑：从 worktree 推送，测试命令里的 git 操作落�
   assert.equal(git('config', '--get', 'core.bare').stdout.trim(), 'false', '推送前钩子把这个仓库改成了裸仓库');
   assert.equal(spawnSync('git', ['-C', probe, 'rev-list', '--count', 'HEAD'], { encoding: 'utf8', env }).stdout.trim(), '1', '测试命令的提交没有落在它自己建的仓库里');
 });
+
+test('pre-push 真跑：测试命令找到的 git 和终端里一样，不是 git 自己 libexec 目录里的那份', t => {
+  // git 跑钩子时把 libexec/git-core 放在 PATH 最前面并设 GIT_EXEC_PATH。测试用 `command -v git` 找到的就成了 libexec 里的 git，
+  // 再换 PATH 跑它，克隆本地仓库时找不到 git-upload-pack（agent-autoloop 的 3 条安装测试只在钩子里失败，2026-11-20，L-07）
+  const { dir, git } = tempRepo(t);
+  const remote = mkdtempSync(path.join(tmpdir(), 'hooks-remote-'));
+  t.after(() => rmSync(remote, { recursive: true, force: true }));
+  execFileSync('git', ['init', '-q', '--bare', remote], { env });
+  const hook = path.join(dir, 'scripts/hooks/pre-push');
+  const tests = 'p=$(command -v git); case "$p" in "$(git --exec-path)"/*) echo "钩子里找到的 git：$p" >&2; exit 1;; esac; [ -z "${GIT_EXEC_PATH:-}" ] || { echo "钩子里还有 GIT_EXEC_PATH" >&2; exit 1; }';
+  writeFileSync(hook, readFileSync(hook, 'utf8').replace(/^TESTS=.*$/m, () => `TESTS='${tests}'`));
+  writeFileSync(path.join(dir, 'scripts/check-rules.mjs'), "console.log('通用规则检查通过');\n");
+  git('remote', 'add', 'origin', remote);
+  git('add', '-A');
+  assert.equal(git('commit', '-q', '-m', 'feat: x').status, 0);
+  const pushed = git('push', '-q', 'origin', 'main');
+  assert.equal(pushed.status, 0, pushed.stderr);
+});
