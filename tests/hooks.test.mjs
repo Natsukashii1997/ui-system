@@ -21,11 +21,15 @@ test('commit-msg：修复类提交没写「同类：」就拒绝，其余不查'
     assert.equal(checkMessage(msg), '', msg);
 });
 
+// 这份测试会被推送前钩子跑到，git 在钩子里带着本项目仓库的位置（GIT_DIR 等）。下面的 git 一律不继承它，只动临时仓库。
+const LOCAL = execFileSync('git', ['rev-parse', '--local-env-vars'], { encoding: 'utf8' }).split('\n').filter(Boolean);
+const env = { ...Object.fromEntries(Object.entries(process.env).filter(([name]) => !LOCAL.includes(name))), GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@example.com', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@example.com' };
+
 function tempRepo(t) {
   const dir = mkdtempSync(path.join(tmpdir(), 'hooks-test-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
-  const git = (...args) => spawnSync('git', ['-C', dir, ...args], { encoding: 'utf8', env: { ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@example.com', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@example.com' } });
-  execFileSync('git', ['init', '-q', '-b', 'main', dir]);
+  const git = (...args) => spawnSync('git', ['-C', dir, ...args], { encoding: 'utf8', env });
+  execFileSync('git', ['init', '-q', '-b', 'main', dir], { env });
   cpSync(path.resolve('scripts/hooks'), path.join(dir, 'scripts/hooks'), { recursive: true });
   git('config', 'core.hooksPath', 'scripts/hooks');
   return { dir, git };
@@ -46,7 +50,7 @@ test('pre-push 真跑：规则检查不过就推不上去，过了才推', t => 
   const { dir, git } = tempRepo(t);
   const remote = mkdtempSync(path.join(tmpdir(), 'hooks-remote-'));
   t.after(() => rmSync(remote, { recursive: true, force: true }));
-  execFileSync('git', ['init', '-q', '--bare', remote]);
+  execFileSync('git', ['init', '-q', '--bare', remote], { env });
   // 项目可能把 TESTS 改成了只在本项目跑得起来的命令（swift、python、tsc）：临时仓库里换回默认，只验钩子的拦与放
   const hook = path.join(dir, 'scripts/hooks/pre-push');
   writeFileSync(hook, readFileSync(hook, 'utf8').replace(/^TESTS=.*$/m, "TESTS='node --test tests/*.test.mjs'"));
@@ -64,4 +68,26 @@ test('pre-push 真跑：规则检查不过就推不上去，过了才推', t => 
   git('commit', '-q', '-m', 'feat: 规则检查过了');
   const ok = git('push', '-q', 'origin', 'main');
   assert.equal(ok.status, 0, ok.stderr);
+});
+
+test('pre-push 真跑：从 worktree 推送，测试命令里的 git 操作落不到这个仓库上', t => {
+  const { dir, git } = tempRepo(t);
+  const scratch = mkdtempSync(path.join(tmpdir(), 'hooks-worktree-'));
+  t.after(() => rmSync(scratch, { recursive: true, force: true }));
+  const [remote, probe, worktree] = ['remote.git', 'probe', 'worktree'].map(name => path.join(scratch, name));
+  execFileSync('git', ['init', '-q', '--bare', remote], { env });
+  // 测试命令换成项目测试里常见的两步：在别处新建一个仓库，往里提交。带着这个仓库的 GIT_DIR 跑，两步都会落到这个仓库上
+  const hook = path.join(dir, 'scripts/hooks/pre-push');
+  const tests = `git init -q "${probe}" && git -C "${probe}" commit -q --allow-empty -m probe`;
+  writeFileSync(hook, readFileSync(hook, 'utf8').replace(/^TESTS=.*$/m, `TESTS='${tests}'`));
+  writeFileSync(path.join(dir, 'scripts/check-rules.mjs'), "console.log('通用规则检查通过');\n");
+  git('remote', 'add', 'origin', remote);
+  git('add', '-A');
+  assert.equal(git('commit', '-q', '-m', 'feat: x').status, 0);
+  assert.equal(git('worktree', 'add', '-q', worktree, '-b', 'side').status, 0);
+  const pushed = spawnSync('git', ['-C', worktree, 'push', '-q', 'origin', 'side'], { encoding: 'utf8', env });
+  assert.equal(pushed.status, 0, pushed.stderr);
+  assert.equal(git('rev-list', '--count', 'side').stdout.trim(), '1', '测试命令的提交落到了推送的分支上');
+  assert.equal(git('config', '--get', 'core.bare').stdout.trim(), 'false', '推送前钩子把这个仓库改成了裸仓库');
+  assert.equal(spawnSync('git', ['-C', probe, 'rev-list', '--count', 'HEAD'], { encoding: 'utf8', env }).stdout.trim(), '1', '测试命令的提交没有落在它自己建的仓库里');
 });
