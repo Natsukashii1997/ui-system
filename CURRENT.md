@@ -4,16 +4,16 @@
 
 更新：2026-11-20。V1.3 定的 A 方案维持：本项目只做 UI 总目录与规范，UI Skill 留在 my-skills，组件代码留在各产品仓库；另开「UI 参考与组件来源」收集好的外部 UI，已收 4 条（LeiBox、歸藏设计系统、awesome-design-md、Vercel 官方 design.md）；基础设计规范 v0.4 已由常浩确认（`docs/design-spec/DESIGN.md`，57 条规则、11 条红线）。唯一下一步：做 UI 资产索引与统一验收清单（执行单 I-UI-1）。
 
-## 可机检的检查加进 ui-preflight 1.1.0：盲测两轮后全过，PR 待合并（2026-11-20，Claude 接手会话，常浩看过计划后回「按计划开工」；本仓库只改本文件、已提交，my-skills PR #125 待合并，未发布）
+## 可机检的检查加进 ui-preflight 1.1.0：盲测两轮后全过，已合并并装上（2026-11-20，Claude 接手会话，常浩看过计划后回「按计划开工」，开 PR 后回「合并」；本仓库只改本文件、已提交，my-skills PR #125 合并，已发布 1.1.0、回读通过）
 
 - 时间：开工 `2026-11-20 23:18`。★ 来由：反向验证报告的建议 3，主线最后一项。上一个会话写完了代码、测试和文档，盲测做到一半，这个会话接着收答卷、打分、开 PR。
 - 改了哪些文件：本仓库只有本文件。代码都在 my-skills（worktree `~/Sandbox/worktrees/my-skills-ui-preflight-checks`，分支 `claude/124-ui-preflight-checks`，提交 `1197507`，[my-skills#125](https://github.com/Natsukashii1997/my-skills/pull/125)，issue my-skills#124）：`ui-preflight` 的脚本从 4 项检查变 8 项（新增正文挤成窄栏、默认字体漏出两项不通过，字符当图标、文字对比度两项只出提示），报告末尾加只供参考的样式清单；SKILL.md、CHANGELOG 升到 1.1.0，evals 新增 E5。这个会话在上一个会话的基础上多改了三处：SKILL.md「边界」补一条（用户顺手要手机宽度截图时不在自查里截，也不绕过脚本另截另量）、evals E3 判定标准第 2 条收紧、evals 加两轮盲测记录。
 - 测试：本仓库 `node --test tests/*.test.mjs` 原样结果 `ℹ pass 11` / `ℹ fail 0`。my-skills 在 worktree 里跑：`node --test tests/*.test.mjs` 原样结果 `ℹ pass 36` / `ℹ fail 0` / `ℹ skipped 3`（不带浏览器，和 CI 一样）；`UI_PREFLIGHT_PLAYWRIGHT=<niuma-home> node --test tests/*.test.mjs` 原样结果 `ℹ pass 39` / `ℹ fail 0`。
 - 验证：盲测两轮，执行和打分都是新开的子 agent，打分方不是出题方。第一轮（执行者是上一个会话开的）E1、E2、E4、E5 过，E3 不过：执行者在脚本之外用 375 宽截了图、量了溢出，标成「只作参考」。改了 SKILL.md 后按 my-skills 的规则五题整组重跑，第二轮五题全过。治理审计：候选目录 0 错误、2 条告警（和 1.0.0 时相同）。脚本用的是无头 Chromium，属于替身；实跑两份真实界面稿的结果沿用上一个会话的（被否的一版报出 3 处窄栏、4 个默认字体按钮，被采纳的一版新四项没有不通过）。证据 `~/Library/Application Support/my-skills/evidence/2026-11-20-ui-preflight-1.1.0/`（`说明.md`、`blind/`、`blind/r2/`）。
 - 截图：无。
-- 发布与回读：未发布。PR 合并、my-skills 主目录拉齐并跑 `link.sh` 之后才生效；现在本机用的还是 1.0.1。
+- 发布与回读：my-skills#125 于 2026-11-20 23:46 squash 合并（`816703e`），主目录拉齐后跑了 `link.sh`。回读：`~/.claude/skills`、`~/.agents/skills` 两处的 SKILL.md 都是 1.1.0；经安装链接对反例样例页实跑一次，报告是八项加样式清单、退出码 1，`--width 375` 退出码 2（`~/Library/Application Support/my-skills/evidence/2026-11-20-ui-preflight-1.1.0/installed-check/`）。回滚：在 my-skills 开 PR 回退 `816703e`，合并后主目录拉齐。
 - 与授权不一致之处、遗留问题、范围外发现：交接写的是「不过的那道题重做」，my-skills 的 AGENTS 写「改 skill 后整组重跑」，按更严的后者做了。默认字体的判定比 issue 写的严（字体族还是浏览器默认值也判不通过），PR 里写明了。范围外发现都没动：报告不记录 `--ignore` 了什么，排除项没法直接核对，建议下一版加；治理审计对已安装的 project-starter 报 1 条错（测试里删 /tmp 下的临时目录），不在这次改动里；工程流程第 5 节和 my-skills 的 AGENTS 写仓库是私有的，实际是公开的；本仓库三个已合并的 worktree 没删（`~/Sandbox/worktrees/ui-system-guizang-extract`、`ui-system-reverse-check`、`ui-system-spec-v04`）；规范附录 B 的建议数值和新增的 Q-07、T-09 没有在真实设计里试查过；Vercel 解读第 3 节的 7 点要不要收进规范。
-- 主线「自己的设计规范」（完成 18/19，2026-11-20 23:44 更新）：✅ 歸藏提炼；✅ 归位；✅ Vercel design.md 解读（已写进仓库）；✅ 九模块提炼；✅ 59 个品牌原文入库；✅ 草案 v0.1（选风格，被否）；✅ 重写为风格无关的 v0.2；✅ 试查数字分身工作台首页；✅ 按试查调 6 处成 v0.3；✅ 前后对比页；✅ 常浩确认 v0.3；✅ Vercel 解读写进仓库；✅ 合并 PR #8；✅ 拿一张被否的页面反向验证；✅ 合并 PR #10；✅ 按反向验证改两处成 v0.4；✖ 三版视觉方向预览；✅ 合并 PR #12；❓ 可机检的检查加进 ui-preflight：代码、测试、盲测都做完，my-skills#125 等常浩说「合并」，合并后主目录拉齐、跑 `link.sh` 才算完成。
+- 主线「自己的设计规范」（完成 19/19，已结束，2026-11-20 23:50 更新）：✅ 歸藏提炼；✅ 归位；✅ Vercel design.md 解读（已写进仓库）；✅ 九模块提炼；✅ 59 个品牌原文入库；✅ 草案 v0.1（选风格，被否）；✅ 重写为风格无关的 v0.2；✅ 试查数字分身工作台首页；✅ 按试查调 6 处成 v0.3；✅ 前后对比页；✅ 常浩确认 v0.3；✅ Vercel 解读写进仓库；✅ 合并 PR #8；✅ 拿一张被否的页面反向验证；✅ 合并 PR #10；✅ 按反向验证改两处成 v0.4；✖ 三版视觉方向预览；✅ 合并 PR #12；✅ 可机检的检查加进 ui-preflight（my-skills#125 合并，`816703e`，1.1.0 已装上）。清单里每一项都是 ✅ 或 ✖，主线结束；范围外发现见上一行，都等常浩定。
 - 本轮新坑：无。
 
 ## 基础设计规范 v0.4：补「还原现状」，T-01 的数量上限降为基础要求（2026-11-20，Claude，先发改动确认，常浩回「两条都改」「合并」；已提交，PR #12 合并，无需发布）
