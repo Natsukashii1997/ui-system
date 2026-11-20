@@ -17,7 +17,43 @@ test('commit-msg：修复类提交没写「同类：」就拒绝，其余不查'
   assert.match(checkMessage('Fix(ui): 表头不齐\n\n同类：\n'), /缺一行「同类：/, '同类后面没写内容也不算');
   assert.equal(checkMessage('fix: 截断\n\n同类：搜了 .slice(0, 数字)，命中 3 处，都改成 fit()\n'), '');
   assert.equal(checkMessage('修复：x\n\n同类: 搜了 toISOString().slice，命中 0 处\n'), '');
-  for (const msg of ['feat: 加导出', '修改 README', '修订交接模板', 'Merge branch x', 'Revert "fix: x"', 'fixup! fix: x', 'prefix: 不是修复', '# 注释\n文档：补说明'])
+  for (const msg of ['feat: 加导出', '修改 README', '修订交接模板', 'Merge branch x', 'Revert "fix: x"', 'fixup! fix: x', 'prefix: 加导出按钮', '# 注释\n文档：补说明'])
+    assert.equal(checkMessage(msg), '', msg);
+});
+
+test('commit-msg：返修、返工、回滚、hotfix 这类不在开头也算修复，写明别的类型或交接、记录的不查', () => {
+  // 0.4.x 只认开头的 fix /「修」，下面这些真实标题（digital-twin、postpane、chatgpt-clipper 等，2026-11）都漏拦了
+  for (const subject of [
+    '#172 返修：backend 所在默认网络断宿主和外网、关 VCS 集成',
+    '0B-1 审查第 1 轮返修：确认码不可覆盖、逐个现读后发',
+    '夜跑主控：按 ChatGPT High 第 1 轮审查返修（#92）',
+    '按交叉审查返修：预留目录核对身份、暂存回收、失败走下载兜底',
+    '安全审计 11-18：修复通道越权、确认误判、日志泄露和并发配置写入',
+    '第 2 批审查修正：预览后八格被改不写入',
+    '侧栏返工：间距按定稿改回',
+    '回滚 #88：撤掉会丢草稿的自动保存',
+    'hotfix: 登录页白屏',
+    'ui: Bugfix for 表头错位',
+  ]) {
+    assert.match(checkMessage(`${subject}\n`), /缺一行「同类：/, subject);
+    assert.equal(checkMessage(`${subject}\n\n同类：搜了同一写法，命中 0 处\n`), '', subject);
+  }
+  assert.match(checkMessage('# 请输入提交说明\n#172 返修：x\n#\n'), /缺一行「同类：/, '编辑器模板里的「# 」注释照样跳过，「#172」开头的标题不当注释');
+  assert.match(checkMessage('0D：升级、回滚、搬家演练\n'), /确实不是修复.*同类：不适用/s, '被拦的非修复提交，报错里告诉它怎么写');
+  assert.equal(checkMessage('0D：升级、回滚、搬家演练\n\n同类：不适用，只是演练记录\n'), '');
+  for (const msg of [
+    'feat: E4a 可访问性基础修复：焦点框、抽屉与 ⌘K 焦点管理',
+    'docs: C 批验收返修记录、浏览器端到端复验脚本与补拍截图',
+    'docs(dt-orc): V4.0 按第 1 轮审查返修（#60）',
+    'chore!: 回滚依赖版本',
+    'CURRENT：0B-4a 第 2 轮返修完成，第 3 轮待常浩授权',
+    '交接：#348 第 4 轮返修',
+    '记录：第 3 轮复审结果与修复提交号（#92）',
+    '文档与交接：#411 L2 第 1 轮返修',
+    'feat: 每日巡检补上辅助任务回退检查',
+    'ADR-015 草案：底座方向、信任边界、迁移回退',
+    'Revert "回滚 #88"',
+  ])
     assert.equal(checkMessage(msg), '', msg);
 });
 
