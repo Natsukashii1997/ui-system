@@ -13,7 +13,7 @@
 | LeiBox | [GitHub](https://github.com/leishifu666/LeiBox) · [在线站](https://leibox.pantoria.cn) | 网页组件、交互与动效收藏：可交互演示加组件文档，导航、卡片、表单、分享、AI 输入、加载反馈、玻璃质感等；另有 LeiBox Skill，可按需检索组件 | 每个组件提供 React / Vue / Svelte / Solid / Preact / Vanilla 版本（以详情页为准） | **未声明开源许可**（GitHub 识别为 NOASSERTION），README 写明「仅供学习使用」，复用要逐个核对来源许可 | 待评估 | 2026-11-08，常浩提供 |
 | 歸藏设计系统 | [GitHub](https://github.com/op7418/dsh-guizang-design) | 设计师歸藏的内容排版设计系统：网页 PPT、图文卡片、网页排版三个 skill 共用一套 token，杂志风 6 套、瑞士风 4 套主题，带中文排版规则、配色对比度约束、版式登记和质检脚本 | HTML/CSS 单文件模板 + Node 校验脚本；DeepSeek Harness 插件 | AGPL-3.0（去 AI 味 skill 为 MIT）；卡片 skill 另有商业授权说明 | 待评估 | 2026-11-20，常浩提供；提炼见 [2026-11-20-歸藏设计规范提炼.md](2026-11-20-歸藏设计规范提炼.md) |
 | awesome-design-md（DESIGN.md 合集） | [GitHub](https://github.com/VoltAgent/awesome-design-md) · [镜像站](https://design.x-meng.cc/) | 按 Google Stitch 提出的 DESIGN.md 格式，从各品牌公开网站提炼的设计规范合集（上游 84 份，镜像站 59 份），每份九个模块；**不是品牌官方文档** | Markdown + 预览 HTML | MIT | 待评估 | 2026-11-20，常浩提供；提炼见 [2026-11-20-DESIGN.md九模块提炼.md](2026-11-20-DESIGN.md九模块提炼.md) |
-| Vercel 官方 design.md | [vercel.com/design](https://vercel.com/design) | Vercel 自己写给 AI 的设计工作说明，管给客户看的报告类网页（报告、提案、对比、计算器）：优先级、何时问人、四遍工作法、构图与克制的判断标准、自查顺序、17 条拒绝清单；色值字号都在配套样式表里 | Markdown + 一份 CSS（Geist 字体） | **未声明许可**，只记链接和解读，原文不进仓库 | 已采用：基础设计规范 v0.3 里 27 条规则以它为出处 | 2026-11-20，常浩提供；解读见 [2026-11-20-Vercel官方design.md解读.md](2026-11-20-Vercel官方design.md解读.md) |
+| Vercel 官方 design.md | [vercel.com/design](https://vercel.com/design) | Vercel 自己写给 AI 的设计工作说明，管给客户看的报告类网页（报告、提案、对比、计算器）：优先级、何时问人、四遍工作法、构图与克制的判断标准、自查顺序、17 条拒绝清单；色值字号都在配套样式表里 | Markdown + 一份 CSS（Geist 字体） | **未声明许可**，只记链接和解读，原文不进仓库 | 已采用：基础设计规范里 27 条规则以它为出处 | 2026-11-20，常浩提供；解读见 [2026-11-20-Vercel官方design.md解读.md](2026-11-20-Vercel官方design.md解读.md) |
 
 ## 条目备注
 
