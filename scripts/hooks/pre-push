@@ -8,6 +8,11 @@ cd "$(git rev-parse --show-toplevel)"
 # 从 worktree 推送时，git 把这个仓库的位置（GIT_DIR 等）带进钩子。不清掉的话，测试在临时目录里做的 git 操作
 # （建仓库、提交、推送）会落到这个仓库上：分支多出测试的提交，主目录被改成裸仓库。
 unset $(git rev-parse --local-env-vars)
+# git 还把自己的 libexec/git-core 放在 PATH 最前面并设 GIT_EXEC_PATH。测试里 `command -v git` 会找到那里的 git，换了 PATH
+# 再跑它就找不到 git-upload-pack 等子命令（agent-autoloop 的 3 条安装测试只在钩子里失败，L-07）。去掉这两项，和在终端里跑一样。
+exec_path=$(git --exec-path)
+PATH=$(printf '%s' "$PATH" | sed "s#^$exec_path:##")
+unset GIT_EXEC_PATH
 TESTS='node --test tests/*.test.mjs'
 echo "[pre-push] 规则检查：node scripts/check-rules.mjs" >&2
 node scripts/check-rules.mjs
