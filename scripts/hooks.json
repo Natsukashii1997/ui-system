@@ -1,0 +1,5 @@
+{
+  "说明": "推送前检查的实现在 agent-kit git-hooks/（写法见那里的 config.mjs），本仓库只写和默认值不同的地方。",
+  "prePushTests": "node --test tests/*.test.mjs",
+  "checkRules": { "allowedDeps": [] }
+}

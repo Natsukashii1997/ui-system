@@ -1,3 +1,7 @@
 #!/bin/sh
-# 修复类提交要写「同类：」一行，规则在 commit-msg.mjs（复盘 P4，常浩 2026-11-20 批）
-exec node "$(git rev-parse --show-toplevel)/scripts/hooks/commit-msg.mjs" "$1"
+# 修复类提交要写「同类：」一行。只转发：实现在 agent-kit git-hooks/，由 node tools/install.mjs --apply 装进本机运行目录。
+# 这里别加逻辑，改检查去 agent-kit 改。
+h="${AGENT_KIT_STATE_DIR:-$HOME/Library/Application Support/agent-kit}/runtime/git-hooks/commit-msg"
+[ -x "$h" ] && exec "$h" "$@"
+echo "[commit-msg] 找不到 agent-kit 共用钩子（$h），提交已拦下：宁可拦错，不悄悄不查。装法：在 agent-kit 主目录、main 上跑 node tools/install.mjs --apply" >&2
+exit 1

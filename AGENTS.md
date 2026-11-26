@@ -31,9 +31,9 @@
 ## 运行
 
 ```sh
-node --test tests/*.test.mjs     # 交接格式 + 通用规则（含自测）
-node scripts/check-rules.mjs     # 只跑通用规则检查
-git config core.hooksPath scripts/hooks   # 装提交、推送前的必经检查（每个克隆、每台电脑各一次；不用 --no-verify 绕过）
+node --test tests/*.test.mjs     # 交接格式
+node ~/Library/Application\ Support/agent-kit/runtime/git-hooks/check-rules.mjs .   # 只跑通用规则检查（共用实现在 agent-kit git-hooks/，本仓库设置在 scripts/hooks.json）
+git config core.hooksPath scripts/hooks   # 装提交、推送前的必经检查（每个克隆、每台电脑各一次；不用 --no-verify 绕过）；钩子只转发到 agent-kit 共用实现，本机先在 agent-kit 跑 node tools/install.mjs --apply
 ```
 
 ## 结构
@@ -50,7 +50,8 @@ docs/
   OPERATIONS.md      操作手册：交接写法、报告与验收
   templates/handoff.md  交接一节的骨架
 scripts/
-  check-rules.mjs    通用规则检查（只查机器能判定的）
+  hooks/             提交、推送前钩子：只转发到 agent-kit 共用实现（git-hooks/）
+  hooks.json         本仓库的钩子设置：推送前跑哪些测试、规则检查扫哪些目录、依赖白名单
 tests/               node:test 测试
 ```
 
@@ -75,7 +76,7 @@ single-context：根目录 `GLOSSARY.md` 与 `docs/adr/`，用到时再建。见
 ## 规则
 
 - 验证用的备份、日志等证据放 `~/Library/Application Support/ui-system/evidence/`，不放 `/tmp`（全局坑 G-01）；私人数据与完整日志不进仓库。
-- 本机服务只监听 127.0.0.1；新增依赖先改 `scripts/check-rules.mjs` 的 `ALLOWED_DEPS`，并在交接里说明理由（`check-rules` 会查）。
+- 本机服务只监听 127.0.0.1；新增依赖先改 `scripts/hooks.json` 的 `checkRules.allowedDeps`，并在交接里说明理由（`check-rules` 会查）。
 - 页面上的时间经统一的格式化函数按北京时间显示，不直接截取 ISO 字符串（全局坑 G-02，`check-rules` 会查）。
 
 ## 交接格式
