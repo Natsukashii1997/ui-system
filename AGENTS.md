@@ -14,7 +14,7 @@
 |---|---|
 | 改需求、加功能 | 《V1.3 架构定稿》（`/Users/nat/Documents/ChatGPT/个人/work/digital-twin/docs/项目体系重构/2026-11-07-V1.3-ChatGPT架构定稿与工程推进令.md`） |
 | 收集或查找 UI 参考、外部组件库 | [docs/references/README.md](docs/references/README.md)（只记链接与评估，不搬代码） |
-| 写或改设计规范 | [docs/design-spec/DESIGN.md](docs/design-spec/DESIGN.md)（与风格无关的基础规范 v0.4，常浩 2026-11-20 确认；还没校验的数值见附录 B） |
+| 写或改设计规范 | [docs/design-spec/DESIGN.md](docs/design-spec/DESIGN.md)（与风格无关的基础规范 v0.5，常浩 2026-11-20 确认 v0.3–v0.4、2026-11-28 确认 v0.5；还没校验的数值见附录 B） |
 | 判断某处算不算已定、要改已定内容 | [docs/DECIDED.md](docs/DECIDED.md) 已定内容登记表（改登记过的内容先单独问常浩） |
 | 排障、改脚本、装 launchd 或定时任务 | 先 `grep -n 关键词 docs/LESSONS.md`，再搜全局坑 `/Users/nat/Documents/ChatGPT/个人/work/agent-kit/LESSONS.md` |
 | 开需求、拆任务、实现、审查 | 下面「Agent skills」一节 |
